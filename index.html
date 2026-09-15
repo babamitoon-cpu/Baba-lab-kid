@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BABAMITOON KIDS LAB — Interactive Worksheet Maker</title>
+<style>
+:root{--yellow:#ffc400;--yellow2:#ffdf55;--black:#111;--white:#fff;--cream:#fffaf0;--gray:#5f6675;--green:#19a879;--red:#e5484d;--blue:#2878d4}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#fffdf7,#fff2a9 45%,#fff 100%);font-family:Inter,Arial,sans-serif;color:var(--black)}
+button,input,select{font:inherit}.app{max-width:1450px;margin:auto;padding:18px}
+header{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:18px}.brand{display:flex;align-items:center;gap:14px}
+.logo-wrap{width:82px;height:82px;border-radius:50%;background:var(--yellow);border:5px solid var(--black);display:grid;place-items:center;overflow:hidden}.logo-wrap img{width:100%;height:100%;object-fit:contain}
+.brand h1{font-size:30px;margin:0;font-weight:950;letter-spacing:-1px}.brand p{margin:4px 0;color:#444;font-weight:700}
+.badges{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.badge{background:#fff;border:2px solid #111;border-radius:999px;padding:9px 13px;font-size:12px;font-weight:900;box-shadow:3px 3px 0 #111}
+.layout{display:grid;grid-template-columns:350px 1fr;gap:18px}.panel,.preview{background:#fffdf8;border:3px solid #111;border-radius:24px;box-shadow:7px 7px 0 #1112}.panel{padding:20px;height:max-content;position:sticky;top:12px}
+.section{margin:0 0 12px;padding:11px 14px;border:2px solid #111;border-radius:13px;background:var(--yellow);font-size:14px;font-weight:950}.section.black{background:#111;color:#fff}
+.field{margin:12px 0}.field label{display:block;font-size:12px;font-weight:950;margin-bottom:6px}.field select,.field input[type=text]{width:100%;padding:11px 12px;border:2px solid #111;border-radius:11px;background:#fff}
+.activities{display:grid;grid-template-columns:1fr 1fr;gap:7px}.check{display:flex;gap:7px;align-items:center;padding:9px;background:#fff;border:2px solid #ddd;border-radius:10px;font-size:12px;font-weight:800}.check input{accent-color:#111}
+.btn{width:100%;border:3px solid #111;border-radius:13px;padding:13px 15px;font-weight:950;cursor:pointer;transition:.12s;box-shadow:4px 4px 0 #111}.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 #111}.generate{background:var(--yellow)}.print{background:#fff;margin-top:9px}.reset{background:#111;color:#fff;margin-top:9px}
+.tip{font-size:11px;color:#626977;line-height:1.5;margin-top:13px}
+.preview{padding:22px}.preview-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}.preview-head h2{margin:0;font-size:22px}.summary{font-size:12px;color:#626977;font-weight:800}.score{background:#111;color:#fff;padding:9px 13px;border-radius:999px;font-size:12px;font-weight:950}
+.worksheet{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.card{background:#fff;border:3px solid #111;border-radius:17px;padding:15px;min-height:240px;position:relative;overflow:hidden}.card.full{grid-column:1/-1}.card h3{margin:0 0 10px;text-align:center;font-size:15px}.tag{height:7px;position:absolute;left:0;right:0;top:0;background:var(--yellow)}.instruction{text-align:center;color:#555;font-size:12px;margin:5px 0 12px}
+.itemrow{display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed #bbb;padding:8px 2px;font-size:13px;gap:10px}.answer-input{width:72px;padding:7px;border:2px solid #111;border-radius:8px;text-align:center}.answer-input.correct{border-color:var(--green);background:#eafff6}.answer-input.wrong{border-color:var(--red);background:#fff0f0}
+.option-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.option{border:2px solid #111;border-radius:10px;background:#fff;padding:10px;cursor:pointer;font-weight:900}.option.selected{background:var(--yellow)}.option.correct{background:#bdf2da}.option.wrong{background:#ffc5c7}
+.tracing{font-size:34px;letter-spacing:13px;color:#a5a9b2;border:2px dashed #aaa;border-radius:12px;padding:18px;text-align:center;line-height:1.6}.trace-input{width:100%;border:0;border-bottom:3px dashed #111;text-align:center;font-size:24px;outline:0;margin-top:12px}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.match-btn{padding:11px;border:2px solid #111;border-radius:10px;background:#fff;cursor:pointer;font-size:18px}.match-btn.active{background:var(--yellow)}.match-btn.matched{background:#bdf2da}
+.maze{font-family:monospace;font-size:25px;line-height:1.05;text-align:center;letter-spacing:4px;padding:10px}.colorbox{border:3px solid #111;border-radius:15px;text-align:center;padding:18px;font-size:75px;filter:grayscale(1);cursor:pointer}.colorbox.done{filter:none}.feedback{margin-top:12px;padding:10px;border-radius:10px;font-size:12px;font-weight:900;text-align:center;background:#f4f4f4}
+.themes{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.theme{padding:8px 11px;border:2px solid #111;border-radius:10px;background:#fff;cursor:pointer;font-weight:900;font-size:12px}.theme.active{background:var(--yellow)}
+.footer{text-align:center;padding:20px;font-size:11px;font-weight:800;color:#5f6675}
+@media(max-width:980px){.layout{grid-template-columns:1fr}.panel{position:static}.badges{display:none}}
+@media(max-width:620px){.app{padding:10px}.brand h1{font-size:21px}.logo-wrap{width:62px;height:62px}.worksheet{grid-template-columns:1fr}.card.full{grid-column:auto}}
+@media print{
+ @page{size:A4;margin:10mm}body{background:#fff}.app{padding:0}.no-print,header,.footer,.themes-wrap{display:none!important}.layout{display:block}.preview{border:0;box-shadow:none;padding:0}.preview-head{display:none}.worksheet{grid-template-columns:1fr 1fr;gap:8mm}.card{break-inside:avoid;min-height:120mm;border:1.5px solid #222}.card.full{grid-column:1/-1}.answer-input{border:1px solid #555}.feedback{display:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand">
+    <div class="logo-wrap"><img src="assets/babamitoon-logo.png" alt="Babamitoon"></div>
+    <div><h1>BABAMITOON KIDS LAB</h1><p>Interactive Kids Worksheet Maker</p></div>
+  </div>
+  <div class="badges">
+    <span class="badge">🎮 Interactive</span><span class="badge">⌨️ Type Answers</span><span class="badge">🖨️ Printable</span><span class="badge">🏆 Instant Score</span>
+  </div>
+</header>
+
+<div class="layout">
+<aside class="panel no-print">
+  <h3 class="section">1. WORKSHEET SETUP</h3>
+  <div class="field"><label>Age</label><select id="age"><option>4–5 Years</option><option selected>5–6 Years</option><option>6–7 Years</option><option>8–9 Years</option><option>10–12 Years</option></select></div>
+  <div class="field"><label>Subject</label><select id="subject"><option selected>Math</option><option>English</option><option>Science</option><option>General Learning</option></select></div>
+  <div class="field"><label>Topic</label><select id="topic"><option selected>Addition</option><option>Counting</option><option>Subtraction</option><option>Alphabet</option><option>Vocabulary</option><option>Animals</option><option>Patterns</option></select></div>
+  <div class="field"><label>Difficulty</label><select id="difficulty"><option selected>Easy</option><option>Medium</option><option>Hard</option></select></div>
+  <div class="field"><label>Student Name</label><input id="student" type="text" placeholder="Type your name"></div>
+
+  <h3 class="section black">2. CHOOSE ACTIVITIES</h3>
+  <div class="activities">
+    <label class="check"><input type="checkbox" value="counting" checked> 🔢 Counting</label>
+    <label class="check"><input type="checkbox" value="addition" checked> ➕ Addition</label>
+    <label class="check"><input type="checkbox" value="subtraction" checked> ➖ Subtraction</label>
+    <label class="check"><input type="checkbox" value="tracing" checked> ✍️ Tracing</label>
+    <label class="check"><input type="checkbox" value="matching" checked> 🔗 Matching</label>
+    <label class="check"><input type="checkbox" value="maze" checked> 🧩 Maze</label>
+    <label class="check"><input type="checkbox" value="coloring" checked> 🎨 Coloring</label>
+    <label class="check"><input type="checkbox" value="quiz" checked> 🧠 Quiz</label>
+  </div>
+
+  <button class="btn generate" onclick="generate()">✨ GENERATE WORKSHEET</button>
+  <button class="btn print" onclick="window.print()">🖨️ PRINT / SAVE PDF</button>
+  <button class="btn reset" onclick="resetAll()">↺ RESET</button>
+  <div class="tip">Interactive mode: click choices, type answers, match pairs, and check your score. Print mode automatically hides the controls and creates a clean worksheet.</div>
+</aside>
+
+<main class="preview">
+  <div class="preview-head">
+    <div><h2>WORKSHEET PREVIEW</h2><div id="summary" class="summary"></div></div>
+    <div id="score" class="score">Score: 0 / 0</div>
+  </div>
+  <div id="worksheet" class="worksheet"></div>
+  <div class="themes-wrap no-print">
+    <h3>CHOOSE A THEME</h3><div id="themes" class="themes"></div>
+  </div>
+</main>
+</div>
+<div class="footer no-print">Learning is Fun with BABAMITOON! ❤️</div>
+</div>
+
+<script>
+const themes={
+ Dinosaur:{a:"🦖",b:"🥚"}, Space:{a:"🚀",b:"⭐"}, Animals:{a:"🐱",b:"🐶"},
+ Princess:{a:"👸",b:"👑"}, Vehicles:{a:"🚗",b:"🚕"}, Cute:{a:"🌈",b:"☁️"},
+ Robot:{a:"🤖",b:"⚙️"}, Ocean:{a:"🐳",b:"🐠"}
+};
+let selectedTheme="Dinosaur", score=0, total=0, matchFirst=null, matchDone=0;
+const themeBox=document.getElementById("themes");
+themeBox.innerHTML=Object.keys(themes).map(t=>`<button class="theme ${t===selectedTheme?'active':''}" onclick="setTheme('${t}',this)">${themes[t].a} ${t}</button>`).join("");
+
+function setTheme(t,el){selectedTheme=t;document.querySelectorAll(".theme").forEach(x=>x.classList.remove("active"));el.classList.add("active");generate();}
+function val(id){return document.getElementById(id).value}
+function difficultyNums(){const d=val("difficulty");return d==="Easy"?[1,2,3,4]:d==="Medium"?[2,4,5,7]:[4,6,8,9]}
+function card(title,body,tag=""){return `<section class="card"><div class="tag"></div><h3>${tag||title}</h3>${body}</section>`}
+function inputRow(text,ans,i){return `<div class="itemrow"><span>${text}</span><input class="answer-input" data-answer="${ans}" aria-label="Answer ${i}" oninput="liveCheck(this)"></div>`}
+function make(type){
+ const th=themes[selectedTheme], nums=difficultyNums(), d=val("difficulty");
+ if(type==="counting") return card("COUNTING",`<div class="instruction">Count the pictures and type the number.</div>${nums.map((x,i)=>inputRow(Array(x+1).fill(th.a).join(" "),x+1,i+1)).join("")}`,"COUNTING");
+ if(type==="addition") return card("ADDITION",`<div class="instruction">Type the correct answer.</div>${nums.map((x,i)=>inputRow(`${x} + ${i+1}`,x+i+1,i+1)).join("")}`,"ADDITION");
+ if(type==="subtraction") return card("SUBTRACTION",`<div class="instruction">Type the correct answer.</div>${nums.map((x,i)=>inputRow(`${x+4} − ${x}`,4,i+1)).join("")}`,"SUBTRACTION");
+ if(type==="tracing") return card("TRACING",`<div class="instruction">Trace the numbers, then type them below.</div><div class="tracing">1 2 3 4 5<br>6 7 8 9 10</div><input class="trace-input" placeholder="Type: 1 2 3 4 5 6 7 8 9 10">`,"TRACING");
+ if(type==="matching") return card("MATCHING",`<div class="instruction">Click one picture, then click its matching pair.</div><div class="match-grid">
+ <button class="match-btn" data-pair="1" onclick="match(this)">🐱</button><button class="match-btn" data-pair="1" onclick="match(this)">🐶</button>
+ <button class="match-btn" data-pair="2" onclick="match(this)">🚗</button><button class="match-btn" data-pair="2" onclick="match(this)">🚕</button>
+ <button class="match-btn" data-pair="3" onclick="match(this)">${th.a}</button><button class="match-btn" data-pair="3" onclick="match(this)">${th.a}</button></div><div id="matchFeedback" class="feedback">Find all 3 pairs!</div>`,"MATCHING");
+ if(type==="maze") return card("MAZE",`<div class="instruction">Help ${th.a} reach ${th.b}. Click the correct path tiles.</div><div class="maze">🟩⬛⬛⬛⬛<br>🟩🟩🟩⬛⬛<br>⬛⬛🟩🟩⬛<br>⬛⬛⬛🟩🟩<br>⬛⬛⬛⬛🟩</div><div class="feedback">START 🟩 → follow the green path → FINISH</div>`,"MAZE");
+ if(type==="coloring") return card("COLORING",`<div class="instruction">Click the picture to reveal the colorful theme.</div><div class="colorbox" onclick="this.classList.toggle('done')">${th.a}</div><div class="feedback">Great! Now color it on paper after printing.</div>`,"COLORING");
+ if(type==="quiz") return card("MINI QUIZ",`<div class="instruction">Click the correct answer.</div><p style="font-weight:900">Which number comes after 5?</p><div class="option-grid">${[4,5,6,7].map(n=>`<button class="option" data-correct="${n===6}" onclick="quiz(this)">${n}</button>`).join("")}</div><div id="quizFeedback" class="feedback">Choose one answer.</div>`,"MINI QUIZ");
+}
+function generate(){
+ score=0;total=0;matchFirst=null;matchDone=0;
+ const selected=[...document.querySelectorAll(".check input:checked")].map(x=>x.value);
+ document.getElementById("summary").textContent=`${document.getElementById("age").value} • ${val("subject")} • ${val("topic")} • ${val("difficulty")} • ${selectedTheme}${document.getElementById("student").value?` • ${document.getElementById("student").value}`:""}`;
+ document.getElementById("worksheet").innerHTML=selected.length?selected.map(make).join(""):`<div class="card full"><h3>NO ACTIVITIES SELECTED</h3><div class="instruction">Choose at least one activity and generate again.</div></div>`;
+ updateScore();
+}
+function liveCheck(el){
+ if(el.dataset.done==="1")return;
+ const typed=el.value.trim(), ans=String(el.dataset.answer);
+ el.classList.remove("correct","wrong");
+ if(!typed)return;
+ if(typed===ans){el.classList.add("correct");el.dataset.done="1";score++;total++;updateScore();}
+ else el.classList.add("wrong");
+}
+function quiz(btn){
+ const all=btn.parentElement.querySelectorAll(".option");all.forEach(x=>x.classList.remove("selected","correct","wrong"));
+ btn.classList.add("selected");
+ if(btn.dataset.correct==="true"){btn.classList.add("correct");score++;total++;document.getElementById("quizFeedback").textContent="🎉 Correct! Great job!";}
+ else{btn.classList.add("wrong");document.getElementById("quizFeedback").textContent="Try again!";}
+ updateScore();
+}
+function match(btn){
+ if(btn.classList.contains("matched"))return;
+ if(!matchFirst){matchFirst=btn;btn.classList.add("active");return;}
+ const same=matchFirst.dataset.pair===btn.dataset.pair;
+ if(same){matchFirst.classList.remove("active");matchFirst.classList.add("matched");btn.classList.add("matched");matchDone++;score++;total++;document.getElementById("matchFeedback").textContent=matchDone===3?"🏆 All pairs matched!":"Nice! Keep going!";}
+ else{document.getElementById("matchFeedback").textContent="Not a pair — try again.";matchFirst.classList.remove("active");}
+ matchFirst=null;updateScore();
+}
+function updateScore(){document.getElementById("score").textContent=`Score: ${score} / ${total}`;}
+function resetAll(){document.getElementById("student").value="";generate();}
+generate();
+</script>
+</body>
+</html>
